@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../public/css/output.css" />
+    <link rel="icon" type="image/x-icon" href="../public/images/quizz4.jpg" />
+    <title>Quizz Website</title>
+  </head>
+  <body class="">
+    <div class="bg-bgColor p-4 m-4">
+      <div class="bg-white p-3">
+        <h2
+          class="text-mainColor font-bold text-lg xl:text-3xl text-center mb-3"
+        >
+          Welcome To Our Quizz Website
+        </h2>
+        <p class="font-bold text-base xl:text-lg mb-3">
+          Before we jump to the quiz, here is some information you should be
+          aware of:
+        </p>
+        <span class="block text-[#777] xl:text-[17px] text-sm pl-3">
+          This quiz consists of 3 different categories. You have the ability to
+          select the category you want from the form below.<br />
+          You can also choose the difficulty level, which affects the time you
+          have to complete the quiz.
+        </span>
+      </div>
+
+      <!-- Form Starts Here -->
+      <form id="quiz-form" class="mx-auto p-4 bg-white mt-4 flex flex-col" action="/start-quiz" method="POST">
+        <!-- Input for User Name -->
+        <div class="w-full py-5">
+          <label class="dropdown-label" for="username">
+            Enter Your Name:</label
+          >
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="dropdown"
+            required
+            placeholder="Your Name"
+          />
+        </div>
+
+        <!-- Quiz Category Selection -->
+        <div class="w-full border-b-[1px] border-[#dfdfdf] py-5">
+          <label class="dropdown-label" for="categories">
+            Choose Your Quiz Category:</label
+          >
+          <select id="categories" name="category" class="dropdown">
+            <option value="html_questions.json">HTML</option>
+            <!-- Add more categories if needed -->
+          </select>
+        </div>
+
+        <!-- Quiz Difficulty Selection -->
+        <div class="w-full py-5">
+          <label class="dropdown-label" for="difficulty">
+            Choose The Difficulty Of The Quiz:</label
+          >
+          <select id="difficulty" name="difficulty" class="dropdown">
+            <option value="7">Easy: 7 minutes</option>
+            <option value="5">Normal: 5 minutes</option>
+            <option value="3">Hard: 3 minutes</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <input
+          type="submit"
+          value="Go To Quiz"
+          class="bg-mainColor w-full font-bold text-lg hover:opacity-90 text-white p-2 rounded-[7px] mx-auto mt-2 block cursor-pointer"
+        />
+      </form>
+    </div>
+
+    <!-- Optional JavaScript Validation (if needed) -->
+    <script>
+      document.getElementById('quiz-form').addEventListener('submit', function (event) {
+        const username = document.getElementById('username').value.trim();
+        if (!username) {
+          event.preventDefault(); // Prevent form submission
+          alert('Please enter your name.');
+        }
+      });
+    </script>
+
+    <!-- <script src="./quiz.js" type="module"></script> -->
+    <script src="../public/js/quiz.js"></script>
+  </body>
+</html>
