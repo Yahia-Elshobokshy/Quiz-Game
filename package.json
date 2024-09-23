@@ -1,0 +1,16 @@
+{
+  "name": "acpc-quiz-game",
+  "version": "1.0.0",
+  "description": "Quiz Game for ACPC Club booth at MIU Freshmen orientation 2024",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "ACPC Club MIU",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0",
+    "nodemon": "^3.1.7",
+    "sqlite3": "^5.1.7"
+  }
+}
