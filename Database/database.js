@@ -19,7 +19,7 @@ const db = new sqlite.Database(dbPath, (err) => {
             CREATE TABLE IF NOT EXISTS questions (
                 questionString TEXT NOT NULL ,
                 questionAnswers TEXT NOT NULL ,
-                questionAnswerIndex Number NOT NULL ,
+                questionCorrectAnswer TEXT NOT NULL ,
                 questionCategory TEXT not NULL
             )
         `);

@@ -16,14 +16,29 @@ const players = {
        getScreenQuery.finalize();
 
     },
+    getPlayer: async (player_name,callback)=>{
+
+        const dbQuery = db.prepare("Select * from players Where player_name = ?")
+        dbQuery.all(player_name, (err,rows)=>{
+            if(err) callback(err)
+            else {
+                callback(null,rows);
+            }
+        })
+
+    },
     createNewPlayer: async (playerData, callback)=>{
+
+
         const dbQuery = db.prepare("Insert into players (player_name,Score) values(?,0)")
         dbQuery.run(playerData.player_name, function(err){
             if(err){
-                console.error("Error creating new Player!\n" + err);
+                
+                callback(err)
             }
             else{
-                console.log("Player Registered!");
+               
+                callback(null)
             }
 
 
@@ -51,7 +66,9 @@ const players = {
             
             else callback(null)
         })
+        dbQuery.finalize();
     }
+    
 
 }
 
