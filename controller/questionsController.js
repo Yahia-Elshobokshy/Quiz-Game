@@ -6,6 +6,8 @@ const questionsController = {
     solveQuestionForPlayer : (req,res)=>{
 
 
+        console.log(req.session.playerID + "" + req.body.questionsSolved[0].questionID)
+        
 
     },
     getQuestions: (req,res)=>{

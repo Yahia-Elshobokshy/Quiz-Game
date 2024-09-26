@@ -38,7 +38,7 @@ app.patch('/player/:player_name',isLoggedin, playerController.updatePlayerData)
 
 app.get('/questions',isLoggedin, questionController.getQuestions)
 app.post('/createNewQuestion', isLoggedin, questionController.createNewQuestion)
-app.post('/solveQuestion', isLoggedin, )
+app.post('/solveQuestion', isLoggedin, questionController.solveQuestionForPlayer)
 app.delete('/deleteQuestion', isLoggedin, questionController.deleteExistingQuestion)
 
 

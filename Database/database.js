@@ -10,7 +10,8 @@ const db = new sqlite.Database(dbPath, (err) => {
         console.log('Connected to the SQLite database.');
         db.run(`
             CREATE TABLE IF NOT EXISTS players (
-                player_name TEXT NOT NULL PRIMARY KEY UNIQUE ,
+                player_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                player_name TEXT NOT NULL UNIQUE ,
                 password TEXT NOT NULL,
                 player_role Number NOT NULL default 0,
                 Score Number NOT NULL default 0
@@ -19,6 +20,7 @@ const db = new sqlite.Database(dbPath, (err) => {
         
         db.run(`
             CREATE TABLE IF NOT EXISTS questions (
+                questionID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,  
                 questionString TEXT NOT NULL ,
                 questionAnswers TEXT NOT NULL ,
                 questionCorrectAnswer TEXT NOT NULL ,
@@ -27,8 +29,8 @@ const db = new sqlite.Database(dbPath, (err) => {
         `);
         db.run(`
                 CREATE TABLE IF NOT EXISTS playerQuestions (
-                    player_name TEXT NOT NULL,
-                    questionID TEXT NOT NULL
+                    playerID INTEGER NOT NULL,
+                    questionID INTEGER NOT NULL
                 )
             `)
     }
