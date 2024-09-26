@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const players = require('../Models/playerModel');
 
 async function checkifPlayerExists(player_name){
@@ -5,7 +6,7 @@ async function checkifPlayerExists(player_name){
         players.getPlayer(player_name, (err, data) => {
             if (err) {
                 reject(err); 
-            } else if (data.length > 0) {
+            } else if (data) {
                 resolve(true); 
             } else {
                 resolve(false); 
@@ -16,13 +17,47 @@ async function checkifPlayerExists(player_name){
 }
 
 const playerController = {
-   createNewPlayer: async (req,res)=>{
+    login : async (req,res)=>{
+        const { player_name } = req.body
+        if(! await checkifPlayerExists(player_name)){ 
+            res.status(400).send({message: "Username not registered, sign up and try again"});
+        }
+        else{
+            if(!req.body.password || !req.body.player_name){
+                res.status(400).send({message: "Username and/or password not provided, Try again!"});
+            } 
+            else{
+               
+                players.getPlayer(player_name,async (err,player)=>{
+                    if(err){
+                        res.status(500).send({error: "Error Logging into account, Try again later!"});
+                    }
+                    else{
+                        const passwordMatch = await bcrypt.compare(req.body.password, player.password);
 
-   
+                        if(!passwordMatch) {
+                        res.status(400).send({message: "Incorrect password"});
+                        }
+                        else{
+                            req.session.player_name = player.player_name;
+                            res.status(200).send({message: "Login Success " + req.session.player_name})
+                        }
+                    }
+                });
+
+                
+            }
+            
+            
+        }
+
+    },
+   createNewPlayer: async (req,res)=>{
     if(await checkifPlayerExists(req.body.player_name)){ 
         res.status(400).send({message: "User already exists,try changing your username"});
     }
     else{
+        req.body.password = await bcrypt.hash(req.body.password, 10);
         players.createNewPlayer(req.body,(err)=>{
             if(err) res.status(500).send({error: "Error Creating new player!"})
             else res.status(200).send({message: "player Created!"}); 
@@ -67,20 +102,27 @@ const playerController = {
    },
    deleteExistingPlayer : async (req,res)=>{
 
-    const {player_name}  = req.params;
+        const {player_name}  = req.params;
+        if(players.getPlayerRole !== 1 || req.session.player_name !== player_name){ ///player_role 1 is the number of admin
+            res.status(400).send({message: "Couldn't delete player!"})
+        }  
+        else {
+            if(!player_name) res.status(400).send({error : "player name required for deletion!"});
+            await players.deletePlayer(player_name, (err)=>{
 
-    if(!player_name) res.status(400).send({error : "player name required for deletion!"});
-    await players.deletePlayer(player_name, (err)=>{
+                if(err) res.status(500).send("Error Deleting User From Database!")
+                else{
+                    req.session.destroy((err)=>{
+                        if(err) res.status(500).send("Error Deleting User From Database!")
+                        else res.status(200).send({message : "User deleted"});
+                    })
+                    
+                }    
+            })
+        
 
-        if(err) res.status(500).send("Error Deleting User From Database!")
-        else{
-            res.status(200).send({message : "User deleted"});
         }
-
-    })
-
-   },
-
+    },
    updatePlayerData : async (req,res)=>{
         const { player_name } = req.params
         const {Score} = req.body;
@@ -97,6 +139,14 @@ const playerController = {
             }
         });
 
+   },
+   logout : (req,res)=>{
+        req.session.destroy((err)=>{
+            if(err) res.status(500).send({error: "Error terminating session"});
+            else{
+                res.status(200).send({message: "session terminated successfully"});
+            }
+        })
    }
 } 
 module.exports = playerController;

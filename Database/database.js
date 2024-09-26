@@ -11,6 +11,8 @@ const db = new sqlite.Database(dbPath, (err) => {
         db.run(`
             CREATE TABLE IF NOT EXISTS players (
                 player_name TEXT NOT NULL PRIMARY KEY UNIQUE ,
+                password TEXT NOT NULL,
+                player_role Number NOT NULL default 0,
                 Score Number NOT NULL default 0
             )
         `);
@@ -23,6 +25,12 @@ const db = new sqlite.Database(dbPath, (err) => {
                 questionCategory TEXT not NULL
             )
         `);
+        db.run(`
+                CREATE TABLE IF NOT EXISTS playerQuestions (
+                    player_name TEXT NOT NULL,
+                    questionID TEXT NOT NULL
+                )
+            `)
     }
 });
 

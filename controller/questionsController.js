@@ -3,6 +3,11 @@ const questions = require("../Models/questionsModel");
 
 const questionsController = {
 
+    solveQuestionForPlayer : (req,res)=>{
+
+
+
+    },
     getQuestions: (req,res)=>{
         const questionCategory = req.query.category;
         questions.getQuizQuestions(questionCategory, (err,rows)=>{

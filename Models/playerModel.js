@@ -2,6 +2,17 @@ const db = require('../Database/database')
 
 const players = {
 
+    getPlayerRole : (player_name)=>{
+
+        const dbQuery = db.prepare('SELECT player_role from players where player_name = ?')
+        dbQuery.all((err,rows)=>{
+            if(err) throw err
+            else{
+                return rows[0];
+            }
+        })
+
+    },
     getAllPlayers: async (callback) => {
 
         const getScreenQuery = db.prepare('SELECT * FROM players');
@@ -18,11 +29,14 @@ const players = {
     },
     getPlayer: async (player_name,callback)=>{
 
+       
         const dbQuery = db.prepare("Select * from players Where player_name = ?")
         dbQuery.all(player_name, (err,rows)=>{
             if(err) callback(err)
             else {
-                callback(null,rows);
+       
+                callback(null,rows[0]);
+                
             }
         })
 
@@ -30,8 +44,8 @@ const players = {
     createNewPlayer: async (playerData, callback)=>{
 
 
-        const dbQuery = db.prepare("Insert into players (player_name,Score) values(?,0)")
-        dbQuery.run(playerData.player_name, function(err){
+        const dbQuery = db.prepare("Insert into players (player_name,password) values(?,?)")
+        dbQuery.run(playerData.player_name, playerData.password, function(err){
             if(err){
                 
                 callback(err)

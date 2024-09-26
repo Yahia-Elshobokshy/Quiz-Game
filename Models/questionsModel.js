@@ -1,7 +1,20 @@
+const { solveQuestionForPlayer } = require('../controller/questionsController');
 const db = require('../Database/database');
 
 const questions = {
 
+    solveQuestionForPlayer : (player_name, solvedQuestions, callback)=>{
+
+        const dbQuery = db.prepare('Insert into playerQuestions (player_name, questionID) values (?,?)');
+        solvedQuestions.forEach(question => {
+            dbQuery.run(player_name,question, (err)=>{
+                if(err) callback(err)
+                else callback(null)
+            })
+        });
+        dbQuery.finalize();
+
+    },
     getQuizQuestions : (quizCategory, callback)=>{
 
         if(quizCategory){
@@ -14,7 +27,7 @@ const questions = {
             });
         }
         else{
-            const dbQuery = db.prepare("Select * From questions");
+            const dbQuery = db.prepare("Select Distinct * From questions ORDER by RANDOM() limit 1");
             dbQuery.all((err,rows)=>{
                 if(err) callback(err)
                 else{
