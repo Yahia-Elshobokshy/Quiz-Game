@@ -3,23 +3,22 @@ const db = require('../Database/database');
 
 const questions = {
 
-    solveQuestionForPlayer : (player_name, solvedQuestions, callback)=>{
+    solveQuestionForPlayer : async (playerID, solvedQuestions, callback)=>{
 
-        const dbQuery = db.prepare('Insert into playerQuestions (player_name, questionID) values (?,?)');
+        const dbQuery = db.prepare('Insert into playerQuestions (playerID, questionID) values (?,?)');
         solvedQuestions.forEach(question => {
-            dbQuery.run(player_name,question, (err)=>{
-                if(err) callback(err)
-                else callback(null)
+            dbQuery.run(playerID,JSON.stringify(question), (err)=>{
+                if(err) throw new Error(err)
             })
         });
         dbQuery.finalize();
 
     },
-    getQuizQuestions : (quizCategory, callback)=>{
+    getQuizQuestions : (playerID, quizCategory, callback)=>{
 
         if(quizCategory){
-            const dbQuery = db.prepare("Select * From questions where questionCategory = ?");
-            dbQuery.all(quizCategory, (err,rows)=>{
+            const dbQuery = db.prepare("Select Distinc * From questions where questionCategory = ? AND questionID NOT IN (Select questionID from playerQuestions WHERE playerID = ?) ORDER by RANDOM() limit 1");
+            dbQuery.all(quizCategory,playerID, (err,rows)=>{
                 if(err) callback(err,null)
                 else{
                     callback(null,rows);
@@ -27,8 +26,8 @@ const questions = {
             });
         }
         else{
-            const dbQuery = db.prepare("Select Distinct * From questions ORDER by RANDOM() limit 1");
-            dbQuery.all((err,rows)=>{
+            const dbQuery = db.prepare("Select Distinct * From questions WHERE questionID NOT IN (Select questionID from playerQuestions WHERE playerID = ?) ORDER by RANDOM() limit 1");
+            dbQuery.all(playerID , (err,rows)=>{
                 if(err) callback(err)
                 else{
                     callback(null,rows);

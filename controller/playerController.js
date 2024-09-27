@@ -39,9 +39,10 @@ const playerController = {
                         res.status(400).send({message: "Incorrect password"});
                         }
                         else{
+                            
                             req.session.player_name = player.player_name;
-                            req.session.playerID = player.playerID;
-                            res.status(200).send({message: "Login Success " + req.session.player_name})
+                            req.session.playerID = player.player_id;
+                            res.status(200).send({message: "Login Success " + req.session.player_name + " ID: " + req.session.playerID})
                         }
                     }
                 });

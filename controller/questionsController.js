@@ -3,16 +3,23 @@ const questions = require("../Models/questionsModel");
 
 const questionsController = {
 
-    solveQuestionForPlayer : (req,res)=>{
+    solveQuestionForPlayer : async (req,res)=>{
+        const {playerID, player_name} = req.session;
+        try {    
+            const {questionsSolved} = req.body;
 
+            await questions.solveQuestionForPlayer(playerID, questionsSolved)
 
-        console.log(req.session.playerID + "" + req.body.questionsSolved[0].questionID)
+            res.status(200).send({message: "Updated Solved question list for " })
+        } catch (error) {
+            res.status(500).send({error: `Failed to update solved questions for ${ player_name}`});
+        }
         
 
     },
     getQuestions: (req,res)=>{
         const questionCategory = req.query.category;
-        questions.getQuizQuestions(questionCategory, (err,rows)=>{
+        questions.getQuizQuestions(req.session.playerID ,questionCategory, (err,rows)=>{
             if(err) {
                 res.status(500).send({message: "couldn't retrive questions from DB"});
             }
