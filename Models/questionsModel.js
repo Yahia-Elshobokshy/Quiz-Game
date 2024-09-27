@@ -7,7 +7,7 @@ const questions = {
 
         const dbQuery = db.prepare('Insert into playerQuestions (playerID, questionID) values (?,?)');
         solvedQuestions.forEach(question => {
-            dbQuery.run(playerID,JSON.stringify(question), (err)=>{
+            dbQuery.run(playerID,question.questionID, (err)=>{
                 if(err) throw new Error(err)
             })
         });
